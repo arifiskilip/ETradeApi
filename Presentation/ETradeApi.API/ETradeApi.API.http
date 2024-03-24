@@ -1,0 +1,6 @@
+@ETradeApi.API_HostAddress = http://localhost:5228
+
+GET {{ETradeApi.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
