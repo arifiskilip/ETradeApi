@@ -1,11 +1,11 @@
 ﻿using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETradeApi.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	public class CustomersController : ControllerBase
 	{
@@ -26,12 +26,12 @@ namespace ETradeApi.API.Controllers
 			};
 			await _customerWriteRepository.AddAsync(customer);
 			await _customerWriteRepository.SaveAsync();
-			return Ok(_customerReadRepository.GetAll());
+			return Ok(await _customerReadRepository.GetAll().ToListAsync());
 		}
-		[HttpPost("Add")]
+		[HttpPost]
 		public async Task<ActionResult> Add([FromBody]Customer customer)
 		{
-			return Ok(await _customerWriteRepository.AddAsync(customer));
+			return Ok(await _customerReadRepository.GetAll().ToListAsync());
 		}
 	}
 }
