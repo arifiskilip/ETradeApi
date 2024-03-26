@@ -1,6 +1,8 @@
 ﻿using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
+using ETradeApi.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETradeApi.API.Controllers
 {
@@ -17,9 +19,20 @@ namespace ETradeApi.API.Controllers
 			_productWriteRepository = productWriteRepository;
 		}
 		[HttpGet]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAll(int pageIndex=1, int pageSize=5)
 		{
-			return Ok(_productReadRepository.GetAll().OrderByDescending(x=> x.CreatedDate));
+			var productsQuery = _productReadRepository.GetAll(false);
+
+		    var result = PaginatedList<Product>.Create(productsQuery, pageIndex, pageSize);
+
+			return Ok(result);
+		}
+		[HttpGet]
+		public async Task<IActionResult> Get()
+		{
+			var productsQuery = _productReadRepository.GetAll(false);
+
+			return Ok(productsQuery);
 		}
 		[HttpPost]
 		public async Task<IActionResult> Add(Product product)
