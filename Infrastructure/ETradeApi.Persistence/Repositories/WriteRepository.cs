@@ -15,10 +15,10 @@ namespace ETradeApi.Persistence.Repositories
 			_context = context;
 		}
 		private DbSet<T> Table => _context.Set<T>();
-		public async Task<bool> AddAsync(T entity)
+		public async Task<EntityEntry<T>> AddAsync(T entity)
 		{
 			EntityEntry<T> entityEntry = await Table.AddAsync(entity);
-			return entityEntry.State == EntityState.Added;
+			return entityEntry;
 		}
 
 		public async Task<bool> AddAsync(List<T> entities)

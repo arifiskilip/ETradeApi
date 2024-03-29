@@ -1,4 +1,5 @@
-﻿using ETradeApi.Application.Repositories;
+﻿using ETradeApi.API.Models;
+using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
 using ETradeApi.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,14 @@ namespace ETradeApi.API.Controllers
 				return Ok();
 			}
 			return BadRequest("İlgili ürün mevcut değil.");
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddV2([FromForm]ProductCreateModel model)
+		{
+			ProductManager productManager = new ProductManager(this._productWriteRepository);
+			var result = await productManager.AddAsync(model);
+			return Ok(result);
 		}
 	}
 }
