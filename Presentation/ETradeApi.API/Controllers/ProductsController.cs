@@ -19,7 +19,7 @@ namespace ETradeApi.API.Controllers
 			_productWriteRepository = productWriteRepository;
 		}
 		[HttpGet]
-		public async Task<IActionResult> GetAll(int pageIndex=1, int pageSize=5)
+		public IActionResult GetAll(int pageIndex=1, int pageSize=5)
 		{
 			var productsQuery = _productReadRepository.GetAll(false);
 
@@ -28,11 +28,14 @@ namespace ETradeApi.API.Controllers
 			return Ok(result);
 		}
 		[HttpGet]
-		public async Task<IActionResult> Get()
+		public async Task<IActionResult> GetById(string id)
 		{
-			var productsQuery = _productReadRepository.GetAll(false);
-
-			return Ok(productsQuery);
+			Product checkCProduct = await _productReadRepository.GetByIdAsync(id,false);
+			if (checkCProduct != null)
+			{
+				return Ok(checkCProduct);
+			}
+			return BadRequest("İlgili ürün mevcut değil.");
 		}
 		[HttpPost]
 		public async Task<IActionResult> Add(Product product)
@@ -40,6 +43,18 @@ namespace ETradeApi.API.Controllers
 			await _productWriteRepository.AddAsync(product);
 			await _productWriteRepository.SaveAsync();
 			return Ok(_productReadRepository.GetAll());
+		}
+		[HttpDelete]
+		public async Task<IActionResult> Delete(string id)
+		{
+			Product checkCProduct = await _productReadRepository.GetByIdAsync(id, true);
+			if (checkCProduct != null)
+			{
+				_productWriteRepository.Delete(checkCProduct);
+				await _productWriteRepository.SaveAsync();
+				return Ok();
+			}
+			return BadRequest("İlgili ürün mevcut değil.");
 		}
 	}
 }

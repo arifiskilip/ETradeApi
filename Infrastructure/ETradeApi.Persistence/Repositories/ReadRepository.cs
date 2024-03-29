@@ -22,7 +22,7 @@ namespace ETradeApi.Persistence.Repositories
 			var query = Table.AsQueryable();
 			if (!tracking)
 				query = query.AsNoTracking();
-			return query;
+			return query.OrderByDescending(x=>x.CreatedDate);
 		}
 
 		public async Task<T> GetByIdAsync(string id, bool tracking = true)
