@@ -44,10 +44,10 @@ namespace ETradeApi.Persistence.Repositories
 		 	return await _context.SaveChangesAsync();
 		}
 
-		public bool Update(T entity)
+		public EntityEntry Update(T entity)
 		{
 			EntityEntry entityEntry = Table.Update(entity);
-			return entityEntry.State == EntityState.Modified;
+			return entityEntry;
 		}
 	}
 }

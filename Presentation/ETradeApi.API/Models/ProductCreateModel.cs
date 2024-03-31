@@ -13,13 +13,24 @@ public class ProductCreateModel
     public IFormFile[] Images { get; set; }
 }
 
+public class ProductUpdateModel
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+	public double Price { get; set; }
+	public int Stock { get; set; }
+	public IFormFile[]? Images { get; set; }
+}
+
 public class ProductManager
 {
     private readonly IProductWriteRepository repository;
+	private readonly IProductReadRepository repostiry2;
 
-	public ProductManager(IProductWriteRepository repository)
+	public ProductManager(IProductWriteRepository repository, IProductReadRepository repostiry2)
 	{
 		this.repository = repository;
+		this.repostiry2 = repostiry2;
 	}
 
 	public async Task<IDataResult<Product>> AddAsync(ProductCreateModel model)
@@ -51,4 +62,30 @@ public class ProductManager
 		return new ErrorDataResult<Product>(prductImages.Message);
        
     }
+
+	public async Task<IDataResult<Product>> Update(ProductUpdateModel model)
+	{
+		//validation
+
+		var checkProduct = await this.repostiry2.GetByIdAsync(model.Id.ToString());
+		
+
+
+
+		var prductImages = FileHelper.Add(model.Images);
+		if (prductImages.Success)
+		{
+			checkProduct.Price = model.Price;
+			checkProduct.Stock = model.Stock;
+            for (int i = 1; i <= prductImages.Data.Count; i++)
+            {
+				checkProduct.Images[checkProduct.Images.Length + i] = prductImages.Data[i];
+			}
+			this.repository.Update(checkProduct);
+            await this.repository.SaveAsync();
+			return new SuccessDataResult<Product>(checkProduct, "Günceleme işlemi başarılı");
+		}
+		return new ErrorDataResult<Product>(prductImages.Message);
+
+	}
 }

@@ -89,6 +89,21 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 			return new SuccessResult();
 		}
 
+		public static IResult Delete(string[]? paths)
+		{
+			if (paths != null && paths.Count() > 0)
+			{
+				foreach (var path in paths)
+				{
+					DeleteOldImageFile(path.Replace("/", "\\"));
+					return new SuccessResult();
+				}
+				return new ErrorResult("Resim silinemedi!");
+			}
+			return new SuccessResult();
+		}
+
+
 
 
 		private static IResult CheckFileTypeValid(string type)

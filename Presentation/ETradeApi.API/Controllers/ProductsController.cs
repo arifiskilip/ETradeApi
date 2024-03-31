@@ -1,6 +1,7 @@
 ﻿using ETradeApi.API.Models;
 using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
+using ETradeApi.Infrastructure.Helpers.FileHelper;
 using ETradeApi.Infrastructure.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -53,15 +54,24 @@ namespace ETradeApi.API.Controllers
 			{
 				_productWriteRepository.Delete(checkCProduct);
 				await _productWriteRepository.SaveAsync();
+				FileHelper.Delete(checkCProduct.Images);
 				return Ok();
 			}
 			return BadRequest("İlgili ürün mevcut değil.");
 		}
 
 		[HttpPost]
+		public async Task<IActionResult> Update([FromForm]ProductUpdateModel product)
+		{
+			ProductManager productManager = new ProductManager(this._productWriteRepository, this._productReadRepository);
+			var result = await productManager.Update(product);
+			return Ok(result);
+		}
+
+		[HttpPost]
 		public async Task<IActionResult> AddV2([FromForm]ProductCreateModel model)
 		{
-			ProductManager productManager = new ProductManager(this._productWriteRepository);
+			ProductManager productManager = new ProductManager(this._productWriteRepository,this._productReadRepository);
 			var result = await productManager.AddAsync(model);
 			return Ok(result);
 		}
