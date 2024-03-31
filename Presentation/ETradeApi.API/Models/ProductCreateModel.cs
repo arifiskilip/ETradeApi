@@ -7,16 +7,16 @@ namespace ETradeApi.API.Models;
 
 public class ProductCreateModel
 {
-    public string Name { get; set; }
-    public double Price { get; set; }
-    public int Stock { get; set; }
-    public IFormFile[] Images { get; set; }
+	public string Name { get; set; }
+	public double Price { get; set; }
+	public int Stock { get; set; }
+	public IFormFile[] Images { get; set; }
 }
 
 public class ProductUpdateModel
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
+	public string Id { get; set; }
+	public string Name { get; set; }
 	public double Price { get; set; }
 	public int Stock { get; set; }
 	public IFormFile[]? Images { get; set; }
@@ -24,7 +24,7 @@ public class ProductUpdateModel
 
 public class ProductManager
 {
-    private readonly IProductWriteRepository repository;
+	private readonly IProductWriteRepository repository;
 	private readonly IProductReadRepository repostiry2;
 
 	public ProductManager(IProductWriteRepository repository, IProductReadRepository repostiry2)
@@ -34,17 +34,17 @@ public class ProductManager
 	}
 
 	public async Task<IDataResult<Product>> AddAsync(ProductCreateModel model)
-    {
-        //validation
-        var prductImages = FileHelper.Add(model.Images);
-        if (prductImages.Success)
-        {
+	{
+		//validation
+		var prductImages = FileHelper.Add(model.Images);
+		if (prductImages.Success)
+		{
 			var addedProduct = await this.repository.AddAsync(new Product()
 			{
 				Name = model.Name,
 				Price = model.Price,
 				Stock = model.Stock,
-				Images = prductImages.Data.ToArray()
+				Images = prductImages.Data.ToList()
 			});
 			await this.repository.SaveAsync();
 			return new SuccessDataResult<Product>(new Product()
@@ -60,32 +60,40 @@ public class ProductManager
 			}, "Ekeleme işlemi başarılı");
 		}
 		return new ErrorDataResult<Product>(prductImages.Message);
-       
-    }
+
+	}
 
 	public async Task<IDataResult<Product>> Update(ProductUpdateModel model)
 	{
 		//validation
-
-		var checkProduct = await this.repostiry2.GetByIdAsync(model.Id.ToString());
-		
-
-
-
-		var prductImages = FileHelper.Add(model.Images);
-		if (prductImages.Success)
+		IDataResult<List<string>> prductImages = new SuccessDataResult<List<string>>();
+		try
 		{
-			checkProduct.Price = model.Price;
-			checkProduct.Stock = model.Stock;
-            for (int i = 1; i <= prductImages.Data.Count; i++)
-            {
-				checkProduct.Images[checkProduct.Images.Length + i] = prductImages.Data[i];
+			var checkProduct = await this.repostiry2.GetByIdAsync(model.Id.ToString());
+			prductImages = FileHelper.Add(model.Images);
+			if (prductImages.Success)
+			{
+				checkProduct.Price = model.Price;
+				checkProduct.Stock = model.Stock;
+				foreach (var item in prductImages.Data)
+				{
+					checkProduct.Images.Add(item);
+				}
+				this.repository.Update(checkProduct);
+				await this.repository.SaveAsync();
+				return new SuccessDataResult<Product>(checkProduct, "Günceleme işlemi başarılı");
 			}
-			this.repository.Update(checkProduct);
-            await this.repository.SaveAsync();
-			return new SuccessDataResult<Product>(checkProduct, "Günceleme işlemi başarılı");
+			return new ErrorDataResult<Product>(prductImages.Message);
 		}
-		return new ErrorDataResult<Product>(prductImages.Message);
+		catch (Exception)
+		{
+			if (prductImages.Data.Count>0)
+			{
+				FileHelper.Delete(prductImages.Data);
+			}
+			return new ErrorDataResult<Product>("İşlem sırasında hata meydana geldi.");
+		}
+
 
 	}
 }

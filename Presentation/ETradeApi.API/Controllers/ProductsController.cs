@@ -3,6 +3,7 @@ using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
 using ETradeApi.Infrastructure.Helpers.FileHelper;
 using ETradeApi.Infrastructure.Pagination;
+using ETradeApi.Infrastructure.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -74,6 +75,27 @@ namespace ETradeApi.API.Controllers
 			ProductManager productManager = new ProductManager(this._productWriteRepository,this._productReadRepository);
 			var result = await productManager.AddAsync(model);
 			return Ok(result);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UrlByDeleteImage(string imagePath,string productId)
+		{
+			var checkProduct = await _productReadRepository.GetByIdAsync(productId);
+			if (checkProduct != null)
+			{
+				if (checkProduct.Images.Any(x => x == imagePath))
+				{
+					checkProduct.Images.Remove(imagePath);
+					await _productWriteRepository.SaveAsync();
+					var result = FileHelper.Delete(imagePath);
+					if (result.Success)
+					{
+						return Ok(result);
+					}
+					return BadRequest(result);
+				}
+			}
+			return BadRequest();
 		}
 	}
 }

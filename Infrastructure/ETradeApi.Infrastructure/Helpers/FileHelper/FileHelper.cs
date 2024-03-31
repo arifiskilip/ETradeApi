@@ -89,7 +89,7 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 			return new SuccessResult();
 		}
 
-		public static IResult Delete(string[]? paths)
+		public static IResult Delete(List<string>? paths)
 		{
 			if (paths != null && paths.Count() > 0)
 			{
