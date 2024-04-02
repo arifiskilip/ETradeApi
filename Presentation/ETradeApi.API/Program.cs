@@ -1,11 +1,15 @@
+using ETradeApi.Application;
 using ETradeApi.Application.Validations;
-using ETradeApi.Persistence.ServiceExtension;
+using ETradeApi.Infrastructure;
+using ETradeApi.Persistence;
 using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddPersistenceServices();
+builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationServices();
 //Cors
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
 {

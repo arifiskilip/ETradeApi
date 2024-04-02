@@ -1,6 +1,4 @@
 ﻿using ETradeApi.Infrastructure.Results;
-using Microsoft.AspNetCore.Http;
-using IResult = ETradeApi.Infrastructure.Results.IResult;
 
 namespace ETradeApi.Infrastructure.Helpers.FileHelper
 {
@@ -9,7 +7,7 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 		private static string _currentFileDirectory = Environment.CurrentDirectory + "\\wwwroot";
 		private static string _folderName = "\\Images\\";
 
-		public static IDataResult<List<string>> Add(IFormFile[] files)
+		public static IDataResult<List<string>> Add(Microsoft.AspNetCore.Http.IFormFile[] files)
 		{
 			List<string> addedImages = new();
 			try
@@ -39,7 +37,7 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 					CheckFileDirectoryExist(directory);
 					CreateImageFile(fileDirectory, file);
 
-					var fileAddressToBeSavedOnDatabase = _folderName + randomGuid + type;
+					string fileAddressToBeSavedOnDatabase = _folderName + randomGuid + type;
 					var productImageUrl = fileAddressToBeSavedOnDatabase.Replace("\\", "/");
 					addedImages.Add(productImageUrl);
 				}
@@ -54,7 +52,7 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 			}
 		}
 
-		public static IResult Update(IFormFile file, string imagePath)
+		public static IResult Update(Microsoft.AspNetCore.Http.IFormFile file, string imagePath)
 		{
 			var fileExist = CheckFileExists(file);
 			if (!fileExist.Success)
@@ -116,7 +114,7 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 		}
 
 
-		private static IResult CheckFileExists(IFormFile file)
+		private static IResult CheckFileExists(Microsoft.AspNetCore.Http.IFormFile file)
 		{
 			if (file != null && file.Length > 0)
 			{
@@ -142,7 +140,7 @@ namespace ETradeApi.Infrastructure.Helpers.FileHelper
 			}
 		}
 
-		private static void CreateImageFile(string directory, IFormFile file)
+		private static void CreateImageFile(string directory, Microsoft.AspNetCore.Http.IFormFile file)
 		{
 			using (FileStream fileStream = File.Create(directory))
 			{

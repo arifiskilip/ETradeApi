@@ -1,11 +1,11 @@
-﻿using ETradeApi.API.Models;
-using ETradeApi.Application.Repositories;
-using ETradeApi.Core.Entities;
-using ETradeApi.Infrastructure.Helpers.FileHelper;
-using ETradeApi.Infrastructure.Pagination;
-using ETradeApi.Infrastructure.Results;
+﻿using ETradeApi.Application.Features.Commands.Products.Add;
+using ETradeApi.Application.Features.Commands.Products.Delete;
+using ETradeApi.Application.Features.Commands.Products.DeleteByImagePath;
+using ETradeApi.Application.Features.Commands.Products.Update;
+using ETradeApi.Application.Features.Queries.Products.GetAllProduct;
+using ETradeApi.Application.Features.Queries.Products.GetByIdProduct;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ETradeApi.API.Controllers
 {
@@ -13,89 +13,70 @@ namespace ETradeApi.API.Controllers
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
-		private readonly IProductReadRepository _productReadRepository;
-		private readonly IProductWriteRepository _productWriteRepository;
+		private readonly IMediator _mediator;
 
-		public ProductsController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
+		public ProductsController(IMediator mediator)
 		{
-			_productReadRepository = productReadRepository;
-			_productWriteRepository = productWriteRepository;
+			_mediator = mediator;
 		}
+
 		[HttpGet]
-		public IActionResult GetAll(int pageIndex=1, int pageSize=5)
+		public async Task<IActionResult> GetAll([FromQuery]GetAllProductQueryRequest request)
 		{
-			var productsQuery = _productReadRepository.GetAll(false);
-
-		    var result = PaginatedList<Product>.Create(productsQuery, pageIndex, pageSize);
-
+			var result = await _mediator.Send(request);
 			return Ok(result);
 		}
 		[HttpGet]
-		public async Task<IActionResult> GetById(string id)
+		public async Task<IActionResult> GetById([FromQuery]GetByIdProductQueryRequest request)
 		{
-			Product checkCProduct = await _productReadRepository.GetByIdAsync(id,false);
-			if (checkCProduct != null)
+			var result = await _mediator.Send(request);
+			if (result.Data.Success)
 			{
-				return Ok(checkCProduct);
+				return Ok(result.Data);
 			}
-			return BadRequest("İlgili ürün mevcut değil.");
+			return BadRequest(result.Data);
 		}
 		[HttpPost]
-		public async Task<IActionResult> Add(Product product)
+		public async Task<IActionResult> Add([FromForm]AddProductCommandRequest request)
 		{
-			await _productWriteRepository.AddAsync(product);
-			await _productWriteRepository.SaveAsync();
-			return Ok(_productReadRepository.GetAll());
+			var result = await _mediator.Send(request);
+			if (result.Data.Success)
+			{
+				return Ok(result.Data);
+			}
+			return BadRequest(result.Data);
 		}
 		[HttpDelete]
-		public async Task<IActionResult> Delete(string id)
+		public async Task<IActionResult> Delete([FromQuery]DeleteProductCommandRequest request)
 		{
-			Product checkCProduct = await _productReadRepository.GetByIdAsync(id, true);
-			if (checkCProduct != null)
+			var result = await _mediator.Send(request);
+			if (result.Data.Success)
 			{
-				_productWriteRepository.Delete(checkCProduct);
-				await _productWriteRepository.SaveAsync();
-				FileHelper.Delete(checkCProduct.Images);
-				return Ok();
+				return Ok(result.Data);
 			}
-			return BadRequest("İlgili ürün mevcut değil.");
+			return BadRequest(result.Data);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Update([FromForm]ProductUpdateModel product)
+		public async Task<IActionResult> Update([FromForm]UpdateProductCommandRequest request)
 		{
-			ProductManager productManager = new ProductManager(this._productWriteRepository, this._productReadRepository);
-			var result = await productManager.Update(product);
-			return Ok(result);
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> AddV2([FromForm]ProductCreateModel model)
-		{
-			ProductManager productManager = new ProductManager(this._productWriteRepository,this._productReadRepository);
-			var result = await productManager.AddAsync(model);
-			return Ok(result);
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> UrlByDeleteImage(string imagePath,string productId)
-		{
-			var checkProduct = await _productReadRepository.GetByIdAsync(productId);
-			if (checkProduct != null)
+			var result = await _mediator.Send(request);
+			if (result.Data.Success)
 			{
-				if (checkProduct.Images.Any(x => x == imagePath))
-				{
-					checkProduct.Images.Remove(imagePath);
-					await _productWriteRepository.SaveAsync();
-					var result = FileHelper.Delete(imagePath);
-					if (result.Success)
-					{
-						return Ok(result);
-					}
-					return BadRequest(result);
-				}
+				return Ok(result.Data);
 			}
-			return BadRequest();
+			return BadRequest(result.Data);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UrlByDeleteImage([FromBody]DeleteByImagePathRequest request)
+		{
+			var result = await _mediator.Send(request);
+			if (result.Data.Success)
+			{
+				return Ok(result.Data);
+			}
+			return BadRequest(result.Data);
 		}
 	}
 }

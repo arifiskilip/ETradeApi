@@ -2,7 +2,7 @@
 
 namespace ETradeApi.Infrastructure.Pagination
 {
-	public class PaginatedList<T> where T:BaseEntity
+	public class PaginatedList<T> where T:BaseEntity 
 	{
 		public IReadOnlyList<T> Items { get; }
 		public PaginationInfo Pagination { get; }
