@@ -1,4 +1,4 @@
-﻿namespace ETradeApi.Infrastructure.Results;
+﻿namespace ETradeApi.Application.Tools.Results;
 
 public interface IResult
 {

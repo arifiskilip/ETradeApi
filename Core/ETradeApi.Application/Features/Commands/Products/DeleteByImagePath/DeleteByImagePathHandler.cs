@@ -1,6 +1,6 @@
 ﻿using ETradeApi.Application.Repositories;
+using ETradeApi.Application.Tools.Results;
 using ETradeApi.Infrastructure.Helpers.FileHelper;
-using ETradeApi.Infrastructure.Results;
 using MediatR;
 
 namespace ETradeApi.Application.Features.Commands.Products.DeleteByImagePath

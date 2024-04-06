@@ -1,4 +1,4 @@
-﻿using ETradeApi.Infrastructure.Results;
+﻿using ETradeApi.Application.Tools.Results;
 
 namespace ETradeApi.Application.Features.Commands.Products.Delete
 {

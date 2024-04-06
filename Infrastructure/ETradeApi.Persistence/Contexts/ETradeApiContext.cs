@@ -1,10 +1,12 @@
 ﻿using ETradeApi.Core.Entities;
 using ETradeApi.Core.Entities.Common;
+using ETradeApi.Core.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETradeApi.Persistence.Contexts;
 
-public class ETradeApiContext : DbContext
+public class ETradeApiContext : IdentityDbContext<AppUser,AppRole,string>
 {
 	public ETradeApiContext(DbContextOptions options) : base(options)
 	{

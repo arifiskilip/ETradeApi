@@ -69,7 +69,7 @@ namespace ETradeApi.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> UrlByDeleteImage([FromBody]DeleteByImagePathRequest request)
+		public async Task<IActionResult> UrlByDeleteImage([FromQuery]DeleteByImagePathRequest request)
 		{
 			var result = await _mediator.Send(request);
 			if (result.Data.Success)

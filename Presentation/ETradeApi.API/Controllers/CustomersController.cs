@@ -1,5 +1,7 @@
 ﻿using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +19,7 @@ namespace ETradeApi.API.Controllers
 			_customerWriteRepository = customerWriteRepository;
 			_customerReadRepository = customerReadRepository;
 		}
-
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet]
 		public async Task<ActionResult> GetAll() {
 			Customer customer = new()

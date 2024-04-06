@@ -1,7 +1,5 @@
-﻿namespace ETradeApi.Infrastructure.Results
+﻿namespace ETradeApi.Application.Tools.Results;
+public interface IDataResult<T> : IResult
 {
-	public interface IDataResult<T> : IResult
-	{
-		T Data { get; }
-	}
+	T Data { get; }
 }

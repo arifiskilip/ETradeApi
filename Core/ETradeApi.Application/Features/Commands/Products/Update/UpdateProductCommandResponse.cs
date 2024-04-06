@@ -1,5 +1,5 @@
-﻿using ETradeApi.Core.Entities;
-using ETradeApi.Infrastructure.Results;
+﻿using ETradeApi.Application.Tools.Results;
+using ETradeApi.Core.Entities;
 
 namespace ETradeApi.Application.Features.Commands.Products.Update
 {
