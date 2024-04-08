@@ -1,47 +1,32 @@
-﻿using ETradeApi.Application.Abstractions.Token;
+﻿using ETradeApi.Application.Abstractions.Services;
 using ETradeApi.Application.Dtos;
 using ETradeApi.Application.Tools.Results;
-using ETradeApi.Core.Entities.Identity;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace ETradeApi.Application.Features.Commands.AppUsers.Login
 {
 	public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, LoginUserCommandResponse>
 	{
-		private readonly UserManager<AppUser> _userManager;
-		private readonly SignInManager<AppUser> _signInManager;
-		private readonly ITokenService _tokenService;
+		private readonly IAuthService _authService;
 
-		public LoginUserCommandHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
+		public LoginUserCommandHandler(IAuthService authService)
 		{
-			_userManager = userManager;
-			_signInManager = signInManager;
-			_tokenService = tokenService;
+			_authService = authService;
 		}
 
 		public async Task<LoginUserCommandResponse> Handle(LoginUserCommandRequest request, CancellationToken cancellationToken)
 		{
-			var checkUser = await _userManager.FindByNameAsync(request.UserNameOrEmail);
-			if (checkUser == null)
+			var token = await _authService.LoginAsync(request.UserNameOrEmail,request.Password);
+			if (token != null)
 			{
-				checkUser = await _userManager.FindByEmailAsync(request.UserNameOrEmail);
-			}
-			if (checkUser != null)
-			{
-				var result = await _signInManager.CheckPasswordSignInAsync(checkUser, request.Password, false);
-				if (result.Succeeded)
+				return new()
 				{
-					await _userManager.ResetAccessFailedCountAsync(checkUser);
-					return new()
-					{
-						Data = new SuccessDataResult<Token>(_tokenService.CreateAccessToken(5, checkUser), "Giriş işlemi başarılı!")
-					};
-				}
+					Data = new SuccessDataResult<Token>(token, "Giriş işlemi başarılı!")
+				};
 			}
 			return new()
 			{
-				Data = new ErrorDataResult<Token>("Kullanıcı adı veye şifre hatalı.")
+				Data = new ErrorDataResult<Token>("Kullanıcı adı veya şifre hatalı!")
 			};
 		}
 	}

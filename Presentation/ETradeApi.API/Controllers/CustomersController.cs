@@ -19,15 +19,8 @@ namespace ETradeApi.API.Controllers
 			_customerWriteRepository = customerWriteRepository;
 			_customerReadRepository = customerReadRepository;
 		}
-		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet]
 		public async Task<ActionResult> GetAll() {
-			Customer customer = new()
-			{
-				Name = "Arif2",
-			};
-			await _customerWriteRepository.AddAsync(customer);
-			await _customerWriteRepository.SaveAsync();
 			return Ok(await _customerReadRepository.GetAll().ToListAsync());
 		}
 		[HttpPost]

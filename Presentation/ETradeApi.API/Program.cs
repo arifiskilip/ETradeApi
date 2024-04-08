@@ -1,3 +1,4 @@
+using ETradeApi.API.Middlewares;
 using ETradeApi.Application;
 using ETradeApi.Application.Validations;
 using ETradeApi.Infrastructure;
@@ -5,6 +6,13 @@ using ETradeApi.Persistence;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Context;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Security.Claims;
 using System.Text;
 
@@ -20,6 +28,26 @@ builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
 {
 	p.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
 }));
+
+// SeriLog
+var columnOptions = new ColumnOptions
+{
+	AdditionalColumns = new Collection<SqlColumn>
+	{
+		new SqlColumn
+			{ColumnName = "Username",DataType=SqlDbType.NVarChar,PropertyName="Username"},
+	}
+};
+Logger log = new LoggerConfiguration()
+	.WriteTo.Console() //Cosnole logla
+	.WriteTo.File("logs/log.txt") //Dosyaya logla
+	.WriteTo.MSSqlServer(
+	connectionString: builder.Configuration.GetConnectionString("MsSQL"), 
+	sinkOptions: new MSSqlServerSinkOptions 
+				{ TableName = "Logs", AutoCreateSqlTable = true },
+	columnOptions:columnOptions)
+	.CreateLogger();
+builder.Host.UseSerilog(log);
 
 builder.Services.AddControllers().AddFluentValidation(conf =>
 	conf.RegisterValidatorsFromAssemblyContaining<ProductValidator>());
@@ -40,6 +68,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			ValidAudience = builder.Configuration["Token:Audience"],
 			ValidIssuer = builder.Configuration["Token:Issuer"],
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
+			//Access token süresi için yapý
 			LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false,
 
 			NameClaimType = ClaimTypes.Name
@@ -54,13 +83,14 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+app.UseSerilogRequestLogging();
 app.UseStaticFiles();
 app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+//app.UseLogUserNameMiddlaware();
 app.MapControllers();
 
 app.Run();

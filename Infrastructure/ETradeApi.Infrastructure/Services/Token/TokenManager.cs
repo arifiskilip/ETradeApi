@@ -42,17 +42,15 @@ namespace ETradeApi.Infrastructure.Services.Token
 			//Token oluşturucu sınıfından bir örnek alalım.
 			JwtSecurityTokenHandler tokenHandler = new();
 			token.AccessToken = tokenHandler.WriteToken(securityToken);
-
-			//string refreshToken = CreateRefreshToken();
-
-			//token.RefreshToken = CreateRefreshToken();
+			//Added Refresh Token
+			token.RefreshToken = CreateRefreshToken();
 			return token;
 
 		}
 
 		public string CreateRefreshToken()
 		{
-			throw new NotImplementedException();
+			return Guid.NewGuid().ToString();
 		}
 	}
 }

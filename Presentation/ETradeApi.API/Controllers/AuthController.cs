@@ -1,4 +1,5 @@
 ﻿using ETradeApi.Application.Features.Commands.AppUsers.Login;
+using ETradeApi.Application.Features.Commands.AppUsers.RefreshTokenLogin;
 using ETradeApi.Application.Features.Commands.AppUsers.Register;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +29,17 @@ namespace ETradeApi.API.Controllers
 		}
 		[HttpPost]
 		public async Task<IActionResult> Login([FromBody] LoginUserCommandRequest request)
+		{
+			var result = await _mediator.Send(request);
+			if (result.Data.Success)
+			{
+				return Ok(result.Data);
+			}
+			return BadRequest(result.Data);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> RefreshTokenLogin([FromBody] RefreshTokenLoginCommandRequest request)
 		{
 			var result = await _mediator.Send(request);
 			if (result.Data.Success)
