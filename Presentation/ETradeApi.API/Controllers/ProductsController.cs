@@ -7,12 +7,10 @@ using ETradeApi.Application.Features.Queries.Products.GetByIdProduct;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace ETradeApi.API.Controllers
 {
 	[Route("api/[controller]/[action]")]
-	[Authorize(AuthenticationSchemes = "Admin")]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
@@ -43,6 +41,7 @@ namespace ETradeApi.API.Controllers
 			return BadRequest(result.Data);
 		}
 		[HttpPost]
+		[Authorize(AuthenticationSchemes = "Admin")]
 		public async Task<IActionResult> Add([FromForm]AddProductCommandRequest request)
 		{
 			var result = await _mediator.Send(request);
@@ -53,6 +52,7 @@ namespace ETradeApi.API.Controllers
 			return BadRequest(result.Data);
 		}
 		[HttpDelete]
+		[Authorize(AuthenticationSchemes = "Admin")]
 		public async Task<IActionResult> Delete([FromQuery]DeleteProductCommandRequest request)
 		{
 			var result = await _mediator.Send(request);
@@ -64,6 +64,7 @@ namespace ETradeApi.API.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(AuthenticationSchemes = "Admin")]
 		public async Task<IActionResult> Update([FromForm]UpdateProductCommandRequest request)
 		{
 			var result = await _mediator.Send(request);
@@ -75,6 +76,7 @@ namespace ETradeApi.API.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(AuthenticationSchemes = "Admin")]
 		public async Task<IActionResult> UrlByDeleteImage([FromQuery]DeleteByImagePathRequest request)
 		{
 			var result = await _mediator.Send(request);

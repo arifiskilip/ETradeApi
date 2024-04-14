@@ -9,15 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{6BAA94FD-CF2B-442F-9099-8FE1EB57E6D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETradeApi.Core", "Core\ETradeApi.Core\ETradeApi.Core.csproj", "{BB454602-F467-4A6D-95D6-624CEB44CFA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETradeApi.Core", "Core\ETradeApi.Core\ETradeApi.Core.csproj", "{BB454602-F467-4A6D-95D6-624CEB44CFA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETradeApi.Application", "Core\ETradeApi.Application\ETradeApi.Application.csproj", "{732E9AE8-2410-495C-A699-F6B61650263D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETradeApi.Application", "Core\ETradeApi.Application\ETradeApi.Application.csproj", "{732E9AE8-2410-495C-A699-F6B61650263D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETradeApi.Infrastructure", "Infrastructure\ETradeApi.Infrastructure\ETradeApi.Infrastructure.csproj", "{5FB40329-80FC-4E0C-BA30-F255326118F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETradeApi.Infrastructure", "Infrastructure\ETradeApi.Infrastructure\ETradeApi.Infrastructure.csproj", "{5FB40329-80FC-4E0C-BA30-F255326118F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETradeApi.Persistence", "Infrastructure\ETradeApi.Persistence\ETradeApi.Persistence.csproj", "{C760A992-E01B-4EB9-8CB0-D15573A93DB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETradeApi.Persistence", "Infrastructure\ETradeApi.Persistence\ETradeApi.Persistence.csproj", "{C760A992-E01B-4EB9-8CB0-D15573A93DB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETradeApi.API", "Presentation\ETradeApi.API\ETradeApi.API.csproj", "{2C2D6618-00CD-4F45-8ED5-D64F07CA1D9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETradeApi.API", "Presentation\ETradeApi.API\ETradeApi.API.csproj", "{2C2D6618-00CD-4F45-8ED5-D64F07CA1D9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETradeApi.SignalR", "Infrastructure\ETradeApi.SignalR\ETradeApi.SignalR.csproj", "{BA60FFAB-B52E-4742-BCDA-858E84623D3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{2C2D6618-00CD-4F45-8ED5-D64F07CA1D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C2D6618-00CD-4F45-8ED5-D64F07CA1D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C2D6618-00CD-4F45-8ED5-D64F07CA1D9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA60FFAB-B52E-4742-BCDA-858E84623D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA60FFAB-B52E-4742-BCDA-858E84623D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA60FFAB-B52E-4742-BCDA-858E84623D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA60FFAB-B52E-4742-BCDA-858E84623D3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{5FB40329-80FC-4E0C-BA30-F255326118F3} = {410B09D0-60CB-461C-B60E-73FAB2A45660}
 		{C760A992-E01B-4EB9-8CB0-D15573A93DB9} = {410B09D0-60CB-461C-B60E-73FAB2A45660}
 		{2C2D6618-00CD-4F45-8ED5-D64F07CA1D9A} = {6BAA94FD-CF2B-442F-9099-8FE1EB57E6D5}
+		{BA60FFAB-B52E-4742-BCDA-858E84623D3D} = {410B09D0-60CB-461C-B60E-73FAB2A45660}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A281B3FF-4833-4561-A946-FEC5E5E46259}

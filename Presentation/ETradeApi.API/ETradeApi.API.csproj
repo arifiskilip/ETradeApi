@@ -22,10 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\ETradeApi.Infrastructure\ETradeApi.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\ETradeApi.Persistence\ETradeApi.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
+    <ProjectReference Include="..\..\Infrastructure\ETradeApi.SignalR\ETradeApi.SignalR.csproj" />
   </ItemGroup>
 
 </Project>

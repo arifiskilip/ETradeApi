@@ -7,14 +7,13 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using Serilog.Context;
 using Serilog.Core;
-using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Security.Claims;
 using System.Text;
+using ETradeApi.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddSignalRServices();
 
 //Cors
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
@@ -84,6 +84,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 app.UseSerilogRequestLogging();
+app.ConfigureExtensionHandler();
 app.UseStaticFiles();
 app.UseCors();
 app.UseHttpsRedirection();
@@ -92,5 +93,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 //app.UseLogUserNameMiddlaware();
 app.MapControllers();
-
+// SignalR Map Hubs
+app.MapHubs();
 app.Run();
