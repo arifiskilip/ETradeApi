@@ -2,7 +2,6 @@
 using ETradeApi.Application.Features.Commands.AppUsers.RefreshTokenLogin;
 using ETradeApi.Application.Features.Commands.AppUsers.Register;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETradeApi.API.Controllers
@@ -17,8 +16,10 @@ namespace ETradeApi.API.Controllers
 		{
 			_mediator = mediator;
 		}
+
 		[HttpPost]
-		public async Task<IActionResult> Regiser([FromBody]RegisterUserCommandRequest request)
+		public async Task<IActionResult>
+		Regiser([FromBody] RegisterUserCommandRequest request)
 		{
 			var result = await _mediator.Send(request);
 			if (result.Data.Success)

@@ -1,5 +1,4 @@
 ﻿using ETradeApi.Application.Abstractions.Services;
-using ETradeApi.Application.Abstractions.Token;
 using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities.Identity;
 using ETradeApi.Persistence.Contexts;
@@ -29,12 +28,21 @@ public static class ServiceRegistration
 
 		services.AddScoped<IProductReadRepository, ProductReadRepository>();
 		services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
-		services.AddScoped<IOrderReadRepository,
-			OrderReadRepository>();
-		services.AddScoped<IOrderWriteRepository,
-			OrderWriteRepository>();
+		services.AddScoped<IOrderReadRepository, OrderReadRepository>();
+		services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+		services.AddScoped<IBasketReadRepository, BasketReadRepository>();
+		services.AddScoped<IBasketWriteRepository, BasketWriteRepository>();
+		services.AddScoped<IOrderDetailReadRepository, OrderDetailReadRepository>();
+		services.AddScoped<IOrderDetailWriteRepository, OrderDetailWriteRepository>();
+		services.AddScoped<IOrderStatusReadRepository, OrderStatusReadRepository>();
+		services.AddScoped<IOrderStatusWriteRepository, OrderStatusWriteRepository>();
+		services.AddScoped<IPaymentTypeReadRepository, PaymentTypeReadRepository>();
+		services.AddScoped<IPaymentTypeWriteRepository, PaymentTypeWriteRepository>();
 
 
 		services.AddScoped<IAuthService, AuthManager>();
+		services.AddScoped<IBasketService, BasketManager>();
+
+
 	}
 }
