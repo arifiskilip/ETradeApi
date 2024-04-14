@@ -14,7 +14,11 @@ public class ETradeApiContext : IdentityDbContext<AppUser,AppRole,string>
 
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Basket> Baskets { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<OrderStatus> OrderStatuses { get; set; }
+    public DbSet<PaymentType> PaymentTypes { get; set; }
+   
 
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

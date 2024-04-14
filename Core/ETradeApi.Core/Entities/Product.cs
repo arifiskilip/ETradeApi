@@ -9,5 +9,5 @@ public class Product : BaseEntity
     public double Price { get; set; }
     public List<string>? Images { get; set; }
 
-    public ICollection<Order> ?Orders { get; set; }
+	public ICollection<Basket> Baskets { get; set; }
 }

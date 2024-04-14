@@ -7,5 +7,8 @@ namespace ETradeApi.Core.Entities.Identity
         public string FullName { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiration { get; set; }
-    }
+
+
+		public ICollection<Basket> Baskets { get; set; }
+	}
 }

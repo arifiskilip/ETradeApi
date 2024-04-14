@@ -29,8 +29,6 @@ public static class ServiceRegistration
 
 		services.AddScoped<IProductReadRepository, ProductReadRepository>();
 		services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
-		services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
-		services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
 		services.AddScoped<IOrderReadRepository,
 			OrderReadRepository>();
 		services.AddScoped<IOrderWriteRepository,
