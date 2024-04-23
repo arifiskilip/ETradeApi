@@ -50,8 +50,10 @@ Logger log = new LoggerConfiguration()
 	.CreateLogger();
 builder.Host.UseSerilog(log);
 
-builder.Services.AddControllers().AddFluentValidation(conf =>
-	conf.RegisterValidatorsFromAssemblyContaining<ProductValidator>());
+builder.Services.AddControllers()
+	.AddFluentValidation(conf =>
+	conf.RegisterValidatorsFromAssemblyContaining<ProductValidator>())
+	.ConfigureApiBehaviorOptions(opt=> opt.SuppressModelStateInvalidFilter = true);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -85,7 +87,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 app.UseSerilogRequestLogging();
-app.ConfigureExtensionHandler();
+//app.ConfigureExtensionHandler();
 app.UseStaticFiles();
 app.UseCors();
 app.UseHttpsRedirection();

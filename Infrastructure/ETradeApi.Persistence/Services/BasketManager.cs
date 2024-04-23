@@ -4,6 +4,7 @@ using ETradeApi.Core.Entities;
 using ETradeApi.Core.Entities.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETradeApi.Persistence.Services
 {
@@ -37,11 +38,53 @@ namespace ETradeApi.Persistence.Services
 			return addedBasket.Entity;
 		}
 
-		public Task DeleteAsync(string id)
+		public async Task DeleteAsync(string id, int? quantity = null)
 		{
-			throw new NotImplementedException();
+			var checkBasket = await _basketReadRepository.GetByIdAsync(id);
+			if (checkBasket != null)
+			{
+				if (quantity != null)
+				{
+					if (checkBasket.Quantity ==1)
+					{
+						_basketWriteRepository.Delete(checkBasket);
+					}
+					else
+					{
+						checkBasket.Quantity -= (int)quantity;
+					}
+				}
+				else
+				{
+					_basketWriteRepository.Delete(checkBasket);
+				}
+				await _basketWriteRepository.SaveAsync();
+			}
+			else
+			{
+				throw new Exception("İlgili sepet bulunamadı.");
+			}
 		}
 
+		public async Task<List<Basket>> GetAllByUserIdAsync()
+		{
+			var appUserId = await GetUserId();
+			var result = await _basketReadRepository
+				.Where(filter: x => x.AppUserId == appUserId, tracking:false)
+				.Include(x=>x.Product)
+				.Select(x=> new Basket()
+				{
+					Id = x.Id,
+					AppUserId = x.AppUserId,
+					ProductId = x.ProductId,
+					Quantity = x.Quantity,
+					CreatedDate = x.CreatedDate,
+					UpdatedDate = x.UpdatedDate,
+					Product = x.Product
+				})
+				.ToListAsync();
+			return result;
+		}
 
 		private async Task<string> GetUserId()
 		{
