@@ -53,7 +53,7 @@ builder.Host.UseSerilog(log);
 builder.Services.AddControllers()
 	.AddFluentValidation(conf =>
 	conf.RegisterValidatorsFromAssemblyContaining<ProductValidator>())
-	.ConfigureApiBehaviorOptions(opt=> opt.SuppressModelStateInvalidFilter = true);
+	.ConfigureApiBehaviorOptions(opt => opt.SuppressModelStateInvalidFilter = true);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

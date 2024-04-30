@@ -2,6 +2,7 @@
 using ETradeApi.Application.Repositories;
 using ETradeApi.Core.Entities;
 using ETradeApi.Core.Entities.Identity;
+using ETradeApi.Persistence.Contexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace ETradeApi.Persistence.Services
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly UserManager<AppUser> _userManager;
 
+
 		public BasketManager(IBasketWriteRepository basketWriteRepository, IBasketReadRepository basketReadRepository, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager)
 		{
 			_basketWriteRepository = basketWriteRepository;
@@ -26,16 +28,24 @@ namespace ETradeApi.Persistence.Services
 		public async Task<Basket> AddAsync(Basket basket)
 		{
 			var checkProduct = await _basketReadRepository.GetSingleAsync(x=> x.ProductId == basket.ProductId);
+
 			if (checkProduct != null)
 			{
 				checkProduct.Quantity += basket.Quantity;
 				await _basketWriteRepository.SaveAsync();
 				return checkProduct;
 			}
-			basket.AppUserId = await GetUserId();
-			var addedBasket = await _basketWriteRepository.AddAsync(basket);
+			Basket test = new Basket()
+			{
+				AppUserId = await GetUserId(),
+				ProductId = basket.ProductId,
+				Quantity = 1
+			};
+			//basket.ProductId = basket.ProductId;
+			//basket.AppUserId = await GetUserId();
+			await _basketWriteRepository.AddAsync(test);
 			await _basketWriteRepository.SaveAsync();
-			return addedBasket.Entity;
+			return basket;
 		}
 
 		public async Task DeleteAsync(string id, int? quantity = null)

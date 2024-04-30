@@ -51,8 +51,8 @@ namespace ETradeApi.Persistence.Services
 			AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
 			if (user != null && user?.RefreshTokenExpiration > DateTime.UtcNow)
 			{
-				Token token = _tokenService.CreateAccessToken(15, user);
-				await UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 15);
+				Token token = _tokenService.CreateAccessToken(60, user);
+				await UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 70);
 				return new()
 				{
 					Data = new SuccessDataResult<Token>(token, "Geçerli token.")
